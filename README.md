@@ -1,2 +1,2 @@
 # Basic-programming-projects
-Just a repository for Programming exercises.
+Just a repository for programming exercises.
