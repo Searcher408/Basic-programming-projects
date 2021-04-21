@@ -36,3 +36,5 @@ def decode(s):
 
 if __name__ == '__main__':
     print(decode("HG[3|B[2|CA]]F"), end='')
+
+
