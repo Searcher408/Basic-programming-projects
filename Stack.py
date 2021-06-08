@@ -1,3 +1,4 @@
+# Python3
 class Stack(object):
     # 初始化栈为空列表
     def __init__(self):
