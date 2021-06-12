@@ -2,11 +2,81 @@
 from _typeshed import OpenBinaryMode
 from typing import List
 
+# DFS
+# 时间复杂度：O(n×m)，其中 n 和 m 分别为矩阵的行数和列数。深度优先搜索过程中，每一个点至多只会被标记一次。
+# 空间复杂度：O(n×m)，主要为深度优先搜索的栈的开销。
 class Solution:
     def solve(self, board: List[List[str]]) -> None:
         """
         Do not return anything, modify board in-place instead.
         """
+        if not board:
+            return
+
+        n, m = len(board), len(board[0])
+
+        def dfs(x, y):
+            if not 0 <= x < n or not 0 <= y < m or board[x][y] != 'O':
+                return
+            
+            board[x][y] = '#'
+            dfs(x + 1, y)
+            dfs(x - 1, y)
+            dfs(x, y + 1)
+            dfs(x, y - 1)
+        
+        for i in range(n):
+            dfs(i, 0)
+            dfs(i, m - 1)
+
+        for i in range(1, m - 1):
+            dfs(0, i)
+            dfs(n - 1, i)
+        
+        for i in range(n):
+            for j in range(m):
+                if board[i][j] == '#':
+                    board[i][j] = 'O'
+                elif board[i][j] == 'O':
+                    board[i][j] = 'X'
+
+# BFS
+# 时间复杂度：O(n×m)，其中 n 和 m 分别为矩阵的行数和列数。广度优先搜索过程中，每一个点至多只会被标记一次。
+# 空间复杂度：O(n×m)，主要为广度优先搜索的队列的开销。
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        if not board:
+            return 
+        
+        n, m = len(board), len(board[0])
+        que = collections.deque()
+        for i in range(n):
+            if board[i][0] == 'O':
+                que.append((i, 0))
+            if board[i][m - 1] == 'O':
+                que.append((i, m - 1))
+        for i in range(1, m - 1):
+            if board[0][i] == 'O':
+                que.append((0, i))
+            if board[n - 1][i] == 'O':
+                que.append((n - 1, i))
+        
+        while que:
+            x, y = que.popleft()
+            board[x][y] = '#'
+            for mx, my in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]:
+                if 0 <= mx < n and 0 <= my < m and board[mx][my] == 'O':
+                    que.append((mx, my))
+        
+        for i in range(n):
+            for j in range(m):
+                if board[i][j] == '#':
+                    board[i][j] = 'O'
+                elif board[i][j] == 'O':
+                    board[i][j] = 'X'
 
 
 # X X X X
@@ -14,9 +84,9 @@ class Solution:
 # X X O X
 # X O O X
 # 这道题拿到基本就可以确定是图的DFS、BFS遍历的题目
-# 题目中说被包围的区间不会存在于边界上，所以边界上的 O 要特殊处理。
-# 将与边界连通的O替换为#作为占位符，待搜索结束后，遇到O就替换为X，遇到#替换为O
-# 问题转化为，如何寻找和边界连通的 O？从边界出发，对图进行DFS和BFS即可
+# 题目中提到任何边界上的 O 都不会被填充为 X。所有的不被包围的 O 都直接或间接与边界上的 O 相连。
+# 将与边界连通的O替换为#作为占位符，待搜索结束后，遇到O就替换为X，遇到#替换为O。
+# 问题转化为，如何寻找和边界连通的 O？从边界出发，对图进行DFS和BFS即可。
 # DFS 递归。最常用，如二叉树的先序遍历。
 # DFS 非递归。一般用 stack。
 # BFS 递归。如二叉树中递归进行层序遍历。
