@@ -33,6 +33,13 @@ if __name__ == "__main__":
     res = test.permute(nums)
     print(res)
 
+# python中的对象按照覆盖方式可以分为两类：可覆盖对象和不可覆盖对象：
+# 可覆盖对象：list,dictionary
+# 不可覆盖对象:int,string,float,tuple
+# 可覆盖对象一旦创建后还可以改变，响应的指向同一个对象引用的变量的内容随之改变；不可覆盖对象一旦创建后就不可以改变。
+# nums和nums[:]之间的区别，其实就是引用和副本之间的区别，
+# 针对可覆盖变量，如果两个变量引用相同的内存，指向同一个对象，修改一个变量的值就会连带的对另一个变量造成影响。
+
 # C++
 class Solution {
 public:
@@ -53,5 +60,39 @@ public:
         vector<vector<int>> res;
         backtrack(res, nums, 0, (int)nums.size());
         return res;
+    }
+};
+
+# C++ 回溯使用标记数组
+class Solution {
+public:
+    int n;
+    vector<bool> status;
+    vector<vector<int>> ret;
+    vector<int> track;
+
+    vector<vector<int>> permute(vector<int> &nums) {
+        n = nums.size();
+        status.resize(n, false);
+        backtrack(nums);
+
+        return ret;
+    }
+
+    void backtrack(vector<int> &nums) {
+        if (track.size() == n) {
+            ret.push_back(track);
+            return;
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (!status[i]) {
+                status[i] = true;
+                track.push_back(nums[i]);
+                backtrack(nums);
+                track.pop_back();
+                status[i] = false;
+            }
+        }
     }
 };
